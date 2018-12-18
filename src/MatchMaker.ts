@@ -225,17 +225,18 @@ export class MatchMaker {
       debugMatchMaking(`trying to join non-existant room "${ roomId }"`);
       return;
 
-    } else if (isReconnect && await this.remoteRoomCall(roomId, 'hasReservedSeat', [clientOptions.sessionId])) {
-      return roomId;
+    } 
+    // else if (isReconnect && await this.remoteRoomCall(roomId, 'hasReservedSeat', [clientOptions.sessionId])) {
+    //   return roomId;
 
-    } else if (await this.remoteRoomCall(roomId, 'hasReachedMaxClients')) {
-      debugMatchMaking(`room "${ roomId }" reached maxClients.`);
-      return;
+    // } else if (await this.remoteRoomCall(roomId, 'hasReachedMaxClients')) {
+    //   debugMatchMaking(`room "${ roomId }" reached maxClients.`);
+    //   return;
 
-    } else if (!(await this.remoteRoomCall(roomId, 'requestJoin', [clientOptions, false]))) {
-      debugMatchMaking(`can't join room "${ roomId }" with options: ${ JSON.stringify(clientOptions) }`);
-      return;
-    }
+    // } else if (!(await this.remoteRoomCall(roomId, 'requestJoin', [clientOptions, false]))) {
+    //   debugMatchMaking(`can't join room "${ roomId }" with options: ${ JSON.stringify(clientOptions) }`);
+    //   return;
+    // }
 
     return roomId;
   }
@@ -377,10 +378,10 @@ export class MatchMaker {
     const remoteRequestJoins = [];
 
     await Promise.all(roomIds.map(async (roomId) => {
-      const maxClientsReached = await this.remoteRoomCall(roomId, 'hasReachedMaxClients');
+      // const maxClientsReached = await this.remoteRoomCall(roomId, 'hasReachedMaxClients');
 
-      // check maxClients before requesting to join.
-      if (maxClientsReached) { return; }
+      // // check maxClients before requesting to join.
+      // if (maxClientsReached) { return; }
 
       const localRoom = this.localRooms[roomId];
       if (!localRoom) {
