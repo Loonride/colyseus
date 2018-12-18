@@ -236,6 +236,10 @@ export class Server {
 
       joinOptions.clientId = client.id;
 
+      if (joinOptions.sessionId) {
+        joinOptions.rejoin = true;
+      }
+
       if (!this.matchMaker.hasHandler(roomName) && !isValidId(roomName)) {
         send(client, [Protocol.JOIN_ERROR, roomName, `Error: no available handler for "${roomName}"`]);
 

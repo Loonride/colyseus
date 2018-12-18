@@ -107,7 +107,7 @@ export class MatchMaker {
       throw new MatchMakeError('join_request_fail');
     }
 
-    if (clientOptions.sessionId) {
+    if (clientOptions.rejoin) {
       isReconnect = await this.presence.get(clientOptions.sessionId);
       if (isReconnect) {
         roomId = isReconnect as any;
