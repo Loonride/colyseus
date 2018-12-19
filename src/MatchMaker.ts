@@ -381,26 +381,32 @@ export class MatchMaker {
     const remoteRequestJoins = [];
 
     await Promise.all(roomIds.map(async (roomId) => {
-      const maxClientsReached = await this.remoteRoomCall(roomId, 'hasReachedMaxClients');
+      try {
+        const maxClientsReached = await this.remoteRoomCall(roomId, 'hasReachedMaxClients');
 
-      // check maxClients before requesting to join.
-      if (maxClientsReached) { return; }
+        // check maxClients before requesting to join.
+        if (maxClientsReached) { return; }
 
-      const localRoom = this.localRooms[roomId];
-      if (!localRoom) {
-        remoteRequestJoins.push(new Promise(async (resolve, reject) => {
-          const score = await this.remoteRoomCall(roomId, 'requestJoin', [clientOptions, false]);
-          resolve({ roomId, score });
-        }));
+        const localRoom = this.localRooms[roomId];
+        if (!localRoom) {
+          remoteRequestJoins.push(new Promise(async (resolve, reject) => {
+            const score = await this.remoteRoomCall(roomId, 'requestJoin', [clientOptions, false]);
+            resolve({ roomId, score });
+          }));
 
-      } else {
-        roomsWithScore.push({
-          roomId,
-          score: localRoom.requestJoin(clientOptions, false) as number,
-        });
+        } else {
+          roomsWithScore.push({
+            roomId,
+            score: localRoom.requestJoin(clientOptions, false) as number,
+          });
+        }
+
+        return true;
       }
-
-      return true;
+      catch (e) {
+        return;
+      }
+      
     }));
 
     return (await Promise.all(remoteRequestJoins)).concat(roomsWithScore);
