@@ -390,8 +390,13 @@ export class MatchMaker {
         const localRoom = this.localRooms[roomId];
         if (!localRoom) {
           remoteRequestJoins.push(new Promise(async (resolve, reject) => {
-            const score = await this.remoteRoomCall(roomId, 'requestJoin', [clientOptions, false]);
-            resolve({ roomId, score });
+            try {
+              const score = await this.remoteRoomCall(roomId, 'requestJoin', [clientOptions, false]);
+              resolve({ roomId, score });
+            }
+            catch (e) {
+              resolve(false);
+            }
           }));
 
         } else {
@@ -409,7 +414,7 @@ export class MatchMaker {
       
     }));
 
-    return (await Promise.all(remoteRequestJoins)).concat(roomsWithScore);
+    return (await Promise.all(remoteRequestJoins)).filter(elem => elem !== false).concat(roomsWithScore);
   }
 
   protected createRoomReferences(room: Room, init: boolean = false): boolean {
