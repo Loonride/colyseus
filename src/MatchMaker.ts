@@ -295,10 +295,15 @@ export class MatchMaker {
     const availableRooms: RoomAvailable[] = [];
 
     await Promise.all(roomIds.map(async (roomId) => {
-      const availability: RoomAvailable = await this.remoteRoomCall(roomId, roomMethodName);
+      try {
+        const availability: RoomAvailable = await this.remoteRoomCall(roomId, roomMethodName);
 
-      if (availability) {
-        availableRooms.push(availability);
+        if (availability) {
+          availableRooms.push(availability);
+        }
+      }
+      catch (e) {
+        
       }
 
       return true;
