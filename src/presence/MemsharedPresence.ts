@@ -30,7 +30,7 @@ export class MemsharedPresence implements Presence {
         return new Promise<boolean>((resolve, reject) => {
             memshared.pubsub(roomId, (err, data) => {
                 if (err) { return reject(err); }
-                resolve(data.length > 0);
+                resolve(data && data.length > 0);
             });
         });
     }
